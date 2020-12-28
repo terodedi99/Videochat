@@ -1,0 +1,85 @@
+<div class="oj-hybrid-applayout-page">
+  <div class="oj-applayout-fixed-top">
+    <header role="banner" class="oj-hybrid-applayout-header">
+      <oj-module config="[[headerConfig]]"></oj-module>
+    </header>
+  </div>
+  <div class="oj-applayout-content">
+    <div role="main" class="oj-hybrid-applayout-content">
+      <div class="oj-hybrid-padding">
+        <h1>Gestor de dispositivos</h1>
+        
+        <div class="oj-flex">
+        	<div class="oj-sm-12">
+				<label>Se han encontrado&nbsp;</label><label data-bind="html : dispositivosConectados().length"></label><label>&nbsp;dispositivos</label>
+			</div>
+			<div class="oj-sm-5">
+				<!-- ko foreach : dispositivosConectados -->
+				<div style="border-style : solid; border-width : 1px">
+					<div>
+						<strong>deviceId:</strong> <span data-bind="html : deviceId"></span>
+					</div>
+					<div>
+						<strong>groupId:</strong> <span data-bind="html : groupId"></span>
+					</div>
+					<div>
+						<strong>kind:</strong> <span data-bind="html : kind"></span>
+					</div>
+					<div>
+						<strong>label:</strong> <span data-bind="html : label"></span>
+					</div>
+					<button data-bind="click : conectar">Conectar este dispositivo</button>
+				</div>
+				<!-- /ko -->
+				
+				<div style="border-style : solid; border-width : 1px">
+					<strong>Características soportadas (<i>supportedConstraints</i>):</strong>
+					<!-- ko foreach : caracteristicasSoportadas -->
+					<div>
+						<strong data-bind="html : nombre"></strong> <span data-bind="html : valor"></span>
+					</div>
+					<!-- /ko -->
+				</div>
+			</div> 
+			
+			<div class="oj-sm-7">
+				<div>
+					<strong>Búsqueda de dispositivo</strong><br>
+					<i>Pulsa un botón para buscar dispositivos según las características deseadas</i>
+					<!-- ko foreach : menuCaracteristicas -->
+					<div class="oj-sm-12">
+						<button data-bind="html : JSON.stringify($data), event : { click : function() { $parent.buscarDispositivo($data); }}"></button>
+					</div>
+					<!-- /ko -->
+				</div>
+				
+				<div>
+					<video id="widgetVideo" playsinline autoplay controls
+						data-bind="attr : { srcObject : streamLocal }"></video>
+				</div>
+				
+				<!-- ko if : tracksDeAudio().length>0 -->
+				<div>
+					Hay <span data-bind="html : tracksDeAudio().length"></span> pistas de audio. 
+					<button data-bind="click : detenerTodas">Detener todas</button>
+				</div>
+				<!-- /ko -->
+				
+				<!-- ko foreach : tracksDeAudio() -->
+				<strong>Pista:</strong> <span data-bind="html : id"></span>
+				<button data-bind="click : stop">Detener</button>
+				<!-- /ko -->
+				
+				<!-- ko if : tracksDeVideo().length>0 -->
+				<div>
+					Hay <span data-bind="html : tracksDeVideo().length"></span> pistas de video.
+					<button data-bind="click : detenerTodas">Detener todas</button>
+				</div>
+				<!-- /ko -->
+			</div>
+		</div>  
+      </div>
+    </div>
+  </div>
+</div>
+
