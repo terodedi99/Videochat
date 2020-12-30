@@ -25,26 +25,6 @@ public abstract class WebSocketVideoChat extends TextWebSocketHandler {
 	protected ConcurrentHashMap<String, WrapperSession> sessionsById = new ConcurrentHashMap<>();
 	
 	protected SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy, HH:mm:ss");
-	 
-	@Override
-	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		session.setBinaryMessageSizeLimit(1000*1024*1024);
-		session.setTextMessageSizeLimit(64*1024);
-		
-		User user = getUser(session);
-		user.setSession(session);
-
-		JSONObject mensaje = new JSONObject();
-		mensaje.put("type", "ARRIVAL");
-		mensaje.put("userName", user.getName());
-		mensaje.put("picture", user.getPicture());
-		
-		this.broadcast(mensaje);
-		
-		WrapperSession wrapper = new WrapperSession(session, user);
-		this.sessionsByUserName.put(user.getName(), wrapper);
-		this.sessionsById.put(session.getId(), wrapper);
-	}
 	
 	protected String formatDate(long millis) {
 		return sdf.format(new Date(millis));

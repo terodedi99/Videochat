@@ -71,11 +71,11 @@ class Chat {
 	}
 	
 	enviarATodos(mensaje) {
-		var mensaje = {
+		var mensajeB = {
 			type : "BROADCAST",
-			message : mensaje
+			message : this.mensajeQueVoyAEnviar()
 		};
-		this.chat.send(JSON.stringify(mensaje));
+		this.chat.send(JSON.stringify(mensajeB));
 	}
 	
 	buscarConversacion(nombreInterlocutor) {

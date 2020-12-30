@@ -15,6 +15,27 @@ import edu.uclm.esi.videochat.model.User;
 public class WebSocketTexto extends WebSocketVideoChat {
 	
 	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
+		session.setBinaryMessageSizeLimit(1000*1024*1024);
+		session.setTextMessageSizeLimit(64*1024);
+		User user = getUser(session);
+		user.setSessionDeTexto(session);
+		
+		JSONObject mensaje = new JSONObject();
+		mensaje.put("type", "ARRIVAL");
+		mensaje.put("userName", user.getName());
+		mensaje.put("picture", user.getPicture());
+		
+		this.broadcast(mensaje);
+		
+		WrapperSession wrapper = new WrapperSession(session, user);
+		this.sessionsByUserName.put(user.getName(), wrapper);
+		this.sessionsById.put(session.getId(), wrapper);
+		
+		System.out.println(user.getName() + "--> Sesión de texto" + session.getId());
+	}
+	
+	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		JSONObject jso = new JSONObject(message.getPayload());
 		String type = jso.getString("type");
@@ -25,16 +46,17 @@ public class WebSocketTexto extends WebSocketVideoChat {
 			JSONObject jsoMessage = new JSONObject();
 			jsoMessage.put("type", "FOR ALL");
 			jsoMessage.put("time", formatDate(System.currentTimeMillis()));
+			System.out.println(jso.getString("message"));
 			jsoMessage.put("message", jso.getString("message"));
 			broadcast(jsoMessage);
 			Message mensaje = new Message();
-			mensaje.setMessage(jso.getString("texto"));
+			mensaje.setMessage(jso.getString("message"));
 			mensaje.setSender(enviador);
 			guardarMensaje(mensaje);
 		} else if (type.equals("PARTICULAR")) {
 			String destinatario = jso.getString("destinatario");
 			User user = Manager.get().findUser(destinatario);
-			WebSocketSession navegadorDelDestinatario = user.getSession();
+			WebSocketSession navegadorDelDestinatario = user.getSessionDeTexto();
 			
 			JSONObject jsoMessage = new JSONObject();
 			jsoMessage.put("time", formatDate(System.currentTimeMillis()));

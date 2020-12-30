@@ -14,6 +14,20 @@ public class WebSocketSignaling extends WebSocketVideoChat {
 	private ConcurrentHashMap<String, VideoRoom> videoRooms = new ConcurrentHashMap<>();
 	
 	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
+		session.setTextMessageSizeLimit(64*1024);
+		
+		User user = getUser(session);
+		user.setSessionDeVideo(session);
+		
+		WrapperSession wrapper = new WrapperSession(session, user);
+		this.sessionsByUserName.put(user.getName(), wrapper);
+		this.sessionsById.put(session.getId(), wrapper);
+		
+		System.out.println(user.getName() + "--> Sesión de video" + session.getId());
+	}
+	
+	@Override
 	protected void handleTextMessage(WebSocketSession navegadorDelRemitente, TextMessage message) throws Exception {
 		JSONObject jso = new JSONObject(message.getPayload());
 		String type = jso.getString("type");

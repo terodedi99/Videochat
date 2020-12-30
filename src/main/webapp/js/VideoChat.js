@@ -51,6 +51,8 @@ class VideoChat {
 				self.addMensaje("Añadiendo sessionDescription a la remoteDescription", "orange");
 				self.conexion.setRemoteDescription(rtcSessionDescription);
 				self.addMensaje("sessionDescription añadida a la remoteDescription", "orange");
+				if (!this.videoLocalOn)
+					this.encenderVideoLocal();
 				return;
 			}
 		}
@@ -208,7 +210,7 @@ class VideoChat {
 				self.addMensaje("sessionDescription recibida del servidor Stun");
 				self.conexion.setLocalDescription(sessionDescription);
 				self.addMensaje("sessionDescription enlazada a la RTCPeerConnnection local");
-				self.addMensaje("Enviando oferta a " + self.destinatario + " mediante el servidor de Signaling");
+				self.addMensaje("Enviando oferta a " + destinatario + " mediante el servidor de Signaling");
 				let msg = {
 					type : "OFFER",
 					sessionDescription : sessionDescription,
