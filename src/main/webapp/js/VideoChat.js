@@ -51,8 +51,8 @@ class VideoChat {
 				self.addMensaje("Añadiendo sessionDescription a la remoteDescription", "orange");
 				self.conexion.setRemoteDescription(rtcSessionDescription);
 				self.addMensaje("sessionDescription añadida a la remoteDescription", "orange");
-				if (!this.videoLocalOn)
-					this.encenderVideoLocal();
+// if (!this.videoLocalOn)
+// this.encenderVideoLocal();
 				return;
 			}
 		}
@@ -60,19 +60,50 @@ class VideoChat {
 	
 	anunciarLlamada(remitente, sessionDescription) {
 		this.addMensaje("Se recibe llamada de " + remitente + " con su sessionDescription", "black");
-		let aceptar = window.confirm("Te llama " + remitente + ". ¿Contestar?\n");
-		if (aceptar)
-			this.aceptarLlamada(remitente, sessionDescription);
-		else
-			this.rechazarLlamada(remitente, sessionDescription);			
+		let rtcSessionDescription = new RTCSessionDescription(sessionDescription);
+		this.conexion.setRemoteDescription(rtcSessionDescription);
+		let sdpConstraints = {};
+		let self = this;
+		this.conexion.createAnswer(
+				function(sessionDescription) {
+					self.addMensaje("sessionDescription recibida del servidor stun");
+					self.conexion.setLocalDescription(sessionDescription).then(
+						function() {
+							self.addMensaje("sessionDescription enlazada a la RTCPeerConnnection local");
+							self.addMensaje("Enviando aceptación al servidor de Signaling");
+							let msg = {
+								type : "LLAMAR",
+								sessionDescription : sessionDescription
+							};
+							self.ws.send(JSON.stringify(msg));
+							self.addMensaje("Vamos a intentar meterlo");
+						}
+					);
+				},
+				function(error) {
+					self.addMensaje("Error al crear oferta en el servidor Stun: " + error, "red");
+				},
+				sdpConstraints
+			);
+//		let msg = {
+//				type : "LLAMAR",
+//				sessionDescription : sessionDescription
+//			};
+//		self.ws.send(JSON.stringify(msg));
+//		let aceptar = window.confirm("Te llama " + remitente + ". ¿Contestar?\n");
+//		if (aceptar){
+//			this.encenderVideoLocal();
+//			this.aceptarLlamada(remitente, sessionDescription);
+//		}
+//		else
+//			this.rechazarLlamada(remitente, sessionDescription);			
 	}
 	
 	aceptarLlamada(remitente, sessionDescription) {
-		if (!this.videoLocalOn)
-			this.encenderVideoLocal();
-		
-		if (!this.conexion)
-			this.crearConexion();
+	
+		this.encenderVideoLocal();
+		this.crearConexion();
+			
 		
 		let rtcSessionDescription = new RTCSessionDescription(sessionDescription);
 		this.addMensaje("Añadiendo sessionDescription a la remoteDescription", "grey");
@@ -101,7 +132,7 @@ class VideoChat {
 				);
 			},
 			function(error) {
-				self.addMensaje("Error al crear oferta en el servidor Stun: " + error, red);
+				self.addMensaje("Error al crear oferta en el servidor Stun: " + error, "red");
 			},
 			sdpConstraints
 		);
@@ -133,13 +164,15 @@ class VideoChat {
 				self.addMensaje("Error al cargar vídeo local: " + error, "red");
 			}
 		);
+		self.crearConexion();
+		
 	}
 	
 	crearConexion() {
 		let self = this;
 		let servers = { 
 			iceServers : [ 
-				//{ "url" : "stun:stun.1.google.com:19302" }
+				// { "url" : "stun:stun.1.google.com:19302" }
 				{ 
 					urls : "turn:localhost",
 					username : "webrtc",
@@ -151,6 +184,7 @@ class VideoChat {
 		this.addMensaje("RTCPeerConnection creada");
 		
 		this.addMensaje("Asociando pistas locales a la RTCPeerConnection");
+		//this.encenderVideoLocal();
 		let localTracks = this.localStream.getTracks();
 		localTracks.forEach(track =>
 			{
@@ -200,30 +234,57 @@ class VideoChat {
 			self.addMensaje("self.conexion.onremovetrack");
 		}
 	}	
+	crearOffer(self){
+		self.conexion.createOffer(
+				function(sessionDescription) {
+					let self = this;
+					self.addMensaje("sessionDescription recibida del servidor Stun");
+					self.conexion.setLocalDescription(sessionDescription);
+					self.addMensaje("sessionDescription enlazada a la RTCPeerConnnection local");
+					self.addMensaje("Enviando oferta a " + destinatario + " mediante el servidor de Signaling");
+					let msg = {
+						type : "OFFER",
+						sessionDescription : sessionDescription,
+						recipient : destinatario
+					};
+					self.ws.send(JSON.stringify(msg));
+					self.addMensaje("Oferta enviada al servidor de signaling");
+				},
+				function(error) {
+					self.addMensaje("Error al crear oferta en el servidor Stun", true);
+				},
+				sdpConstraints
+			);
+	}
 	
 	enviarOferta(destinatario) {
 		let self = this;
 		let sdpConstraints = {};
 		this.addMensaje("Creando oferta en el servidor Stun");
+		this.encenderVideoLocal();
+		//setTimeout(self.crearConexion,3000);
 		this.conexion.createOffer(
-			function(sessionDescription) {
-				self.addMensaje("sessionDescription recibida del servidor Stun");
-				self.conexion.setLocalDescription(sessionDescription);
-				self.addMensaje("sessionDescription enlazada a la RTCPeerConnnection local");
-				self.addMensaje("Enviando oferta a " + destinatario + " mediante el servidor de Signaling");
-				let msg = {
-					type : "OFFER",
-					sessionDescription : sessionDescription,
-					recipient : destinatario
-				};
-				self.ws.send(JSON.stringify(msg));
-				self.addMensaje("Oferta enviada al servidor de signaling");
-			},
-			function(error) {
-				self.addMensaje("Error al crear oferta en el servidor Stun", true);
-			},
-			sdpConstraints
-		);
+				function(sessionDescription) {
+					//let self = this;
+					self.addMensaje("sessionDescription recibida del servidor Stun");
+					self.conexion.setLocalDescription(sessionDescription);
+					self.addMensaje("sessionDescription enlazada a la RTCPeerConnnection local");
+					self.addMensaje("Enviando oferta a " + destinatario + " mediante el servidor de Signaling");
+					let msg = {
+						type : "OFFER",
+						sessionDescription : sessionDescription,
+						recipient : destinatario
+					};
+					self.ws.send(JSON.stringify(msg));
+					self.addMensaje("Oferta enviada al servidor de signaling");
+				},
+				function(error) {
+					self.addMensaje("Error al crear oferta en el servidor Stun", true);
+				},
+				sdpConstraints
+			);
+		
+		
 	}
 
 	addMensaje(texto, color) {

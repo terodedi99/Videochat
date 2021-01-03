@@ -21,4 +21,15 @@ class Conversacion {
 		var mensaje = new Mensaje(this.textoAEnviar());
 		this.addMensaje(mensaje);
 	}
+	
+	llamar() {
+		var mensaje = {
+			type : "LLAMAR",
+			destinatario : this.nombreInterlocutor,
+			texto : this.textoAEnviar()
+		};
+		this.chat.enviar(mensaje);
+		var mensaje = new Mensaje(this.textoAEnviar());
+		this.addMensaje(mensaje);
+	}
 }

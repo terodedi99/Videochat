@@ -1,5 +1,6 @@
 package edu.uclm.esi.videochat.model;
 
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import javax.persistence.Entity;

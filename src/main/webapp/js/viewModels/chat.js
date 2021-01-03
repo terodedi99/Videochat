@@ -27,7 +27,8 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 			accUtils.announce('Chat page loaded.');
 			document.title = "Chat";
 
-			getUsuariosConectados();			
+			getUsuariosConectados();
+
 		};
 
 		function getUsuariosConectados() {
@@ -48,6 +49,7 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 			};
 			$.ajax(data);
 		}
+	
 		
 		self.encenderVideoLocal = function() {
 			self.videoChat().encenderVideoLocal();
@@ -68,6 +70,10 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 		self.transitionCompleted = function() {
 			// Implement if needed
 		};
+		
+		self.cortarLlamada = function(){
+			self.videoChat().cortarLlamada();
+		}
 	}
 
 	return ChatViewModel;

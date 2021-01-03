@@ -7,6 +7,8 @@ class Chat {
 		this.error = ko.observable();
 		
 		this.usuarios = ko.observableArray([]);
+		this.llamadasEntrantes = ko.observableArray([]);
+		this.llamadasEntrantes.push("Isma");
 		this.mensajesRecibidos = ko.observableArray([]);
 		this.conversaciones = ko.observableArray([]);
 		
@@ -36,8 +38,14 @@ class Chat {
 				var mensaje = new Mensaje(data.message, data.time);
 				self.mensajesRecibidos.push(mensaje);
 			} else if (data.type == "ARRIVAL") {
-				var usuario = new Usuario(data.userName, data.picture);
-				self.usuarios.push(usuario);
+				self.addUsuario(data.userName, data.picture);
+//				var usuario = new Usuario(data.userName, data.picture);
+//				self.usuarios.push(usuario);
+			} else if (data.type == "LLAMAR") {
+				self.addLlamadaEntrante(data.userName, data.picture);
+				self.mensajesRecibidos.push("En teoria se ha metido");
+//				var usuario = new Usuario(data.userName, data.picture);
+//				self.usuarios.push(usuario);
 			} else if (data.type == "BYE") {
 				var userName = data.userName;
 				for (var i=0; i<self.usuarios().length; i++) {
@@ -64,6 +72,10 @@ class Chat {
 	
 	close() {
 		this.chat.close();
+	}
+	
+	cortarLlamada(){
+		
 	}
 	
 	enviar(mensaje) {
@@ -104,7 +116,18 @@ class Chat {
 	}
 	
 	addUsuario(userName, picture) {
-		this.usuarios.push(new Usuario(userName, picture));
+		var añadir = true;
+		for(var i = 0; i < this.usuarios().length; i++){
+			if (this.usuarios()[i].nombre == userName){
+				añadir = false;
+			}
+		}
+		if (añadir){
+			this.usuarios.push(new Usuario(userName, picture));			
+		}
 	}
+	
+	addLlamadaEntrante(userName, picture){
+		this.llamadasEntrantes.push(userName);}
 }
 	

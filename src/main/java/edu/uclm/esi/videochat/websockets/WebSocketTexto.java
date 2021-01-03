@@ -1,5 +1,7 @@
 package edu.uclm.esi.videochat.websockets;
 
+import java.util.Date;
+
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
@@ -52,6 +54,7 @@ public class WebSocketTexto extends WebSocketVideoChat {
 			Message mensaje = new Message();
 			mensaje.setMessage(jso.getString("message"));
 			mensaje.setSender(enviador);
+			mensaje.setDate(System.currentTimeMillis());
 			guardarMensaje(mensaje);
 		} else if (type.equals("PARTICULAR")) {
 			String destinatario = jso.getString("destinatario");
@@ -66,7 +69,10 @@ public class WebSocketTexto extends WebSocketVideoChat {
 			Message mensaje = new Message();
 			mensaje.setMessage(jso.getString("texto"));
 			mensaje.setSender(enviador);
+			mensaje.setRecipient(destinatario);
+			mensaje.setDate(System.currentTimeMillis());
 			guardarMensaje(mensaje);
+			
 		}
 	}
 
