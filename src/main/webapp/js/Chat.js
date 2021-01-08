@@ -1,11 +1,11 @@
 class Chat {
-	constructor(ko) {
+	constructor(ko, user) {
 		let self = this;
 		this.ko = ko;
 		
 		this.estado = ko.observable("");
 		this.error = ko.observable();
-		
+		this.user = user;
 		this.usuarios = ko.observableArray([]);
 		this.llamadasEntrantes = ko.observableArray([]);
 		this.llamadasEntrantes.push("Isma");
@@ -14,7 +14,9 @@ class Chat {
 		
 		this.destinatario = ko.observable();
 		this.mensajeQueVoyAEnviar = ko.observable();
-		
+		this.personaABuscar = ko.observable();
+
+		this.mensajesRecuperados = ko.observableArray([]);
 		this.chat = new WebSocket("wss://" + window.location.host + "/wsTexto");
 		
 		this.chat.onopen = function() {
@@ -32,11 +34,12 @@ class Chat {
 			self.error("Chat de texto cerrado");
 		}
 		
+	
 		this.chat.onmessage = function(event) {
 			var data = JSON.parse(event.data);
 			if (data.type == "FOR ALL") {
 				var mensaje = new Mensaje(data.message, data.time);
-				self.mensajesRecibidos.push(mensaje);
+				this.mensajesRecibidos.push(mensaje);
 			} else if (data.type == "ARRIVAL") {
 				self.addUsuario(data.userName, data.picture);
 //				var usuario = new Usuario(data.userName, data.picture);
@@ -76,6 +79,42 @@ class Chat {
 	
 	cortarLlamada(){
 		
+	}
+	
+	recuperarMensajes(){
+		let self = this;
+		console.log("Sender:" +this.user().name + ", Recipient: " + this.personaABuscar())
+		//self.message("Has pulsado recuperar mensajes de: " + self.personaABuscar);
+		var info = {
+			sender: this.user().name,
+			recipient : this.personaABuscar()
+			
+		};
+		var data = {
+			data : JSON.stringify(info),
+			url : "users/recuperarMensajes",
+			type : "post",
+			contentType : 'application/json',
+			success : function(response) {
+				console.log("Buena maquina");
+				for (var i=0; i<response.length; i++){
+					//this.mensajesRecuperados.push(response[i]);
+					//console.log(this.personaABuscar());
+					//console.log(this.mensajesRecuperados());
+					//console.log(self.mensajesRecuperados());
+					self.mensajesRecuperados.push(response[i].message);
+					console.log(self.mensajesRecuperados);
+					
+					
+				}
+//				app.user = ko.observable(response);
+//				app.router.go( { path : 'chat' } );
+			},
+			error : function(response) {
+				alert("Error: "/* + response.responseJSON.error*/);
+			}
+		};
+		$.ajax(data);
 	}
 	
 	enviar(mensaje) {

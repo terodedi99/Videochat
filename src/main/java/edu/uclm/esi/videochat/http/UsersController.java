@@ -1,6 +1,7 @@
 package edu.uclm.esi.videochat.http;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,8 @@ import edu.uclm.esi.videochat.model.Email;
 import edu.uclm.esi.videochat.model.Manager;
 import edu.uclm.esi.videochat.model.Token;
 import edu.uclm.esi.videochat.model.User;
+import edu.uclm.esi.videochat.model.Message;
+import edu.uclm.esi.videochat.springdao.MessageRepository;
 import edu.uclm.esi.videochat.springdao.TokenRepository;
 import edu.uclm.esi.videochat.springdao.UserRepository;
 
@@ -34,6 +37,9 @@ public class UsersController {
 	
 	@Autowired
 	private UserRepository userRepo;
+	@Autowired
+	private MessageRepository messageRepo;
+	
 	@Autowired
 	private TokenRepository tokenRepo;
 	
@@ -79,6 +85,16 @@ public class UsersController {
 			" o aquí: " +
 			"https://localhost:7500/users/confirmarCuenta2/" + token.getId());
 	}
+	
+	@PostMapping(value = "/recuperarMensajes")
+	public ArrayList<Message>  recuperarMensajes( @RequestBody Map<String, Object> personas) throws IOException {
+		JSONObject jso = new JSONObject(personas);
+		String sender = jso.getString("sender");
+		String recipient = jso.getString("recipient");
+		ArrayList<Message> Mensajes = messageRepo.recuperarMensajes(sender, recipient);
+		return Mensajes;
+		//return messageRepo.recuperarMensajes(sender, recipient);
+		}
 	
 	@GetMapping("/confirmarCuenta2/{tokenId}")
 	public void confirmarCuenta2(HttpServletRequest request, HttpServletResponse response, @PathVariable String tokenId) throws IOException {

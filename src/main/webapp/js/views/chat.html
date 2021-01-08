@@ -61,7 +61,7 @@
 								data-bind="click : function() { $parents[$parents.length-1].enviarOferta($data); }">Aceptar</button>
 							<button id="btnCortar" data-bind="click : function() { $parent.cortarLlamada(); }">Rechazar</button>
 						</div>
-						<!-- /ko -->
+						<!-- /ko -->		
 					</div>
 
 					<div class="oj-sm-4">
@@ -91,7 +91,7 @@
 							<!-- /ko -->
 							<input type="text" data-bind="value : textoAEnviar"
 								placeholder="Texto de tu mensaje">
-							<button data-bind="click : enviar">Enviar</button>
+							<button data-bind="click : enviar">Enviar</button> <!-- En que momento le envia el mensaje -->
 
 							<!-- ko foreach : mensajes -->
 							<div>
@@ -118,20 +118,22 @@
 							width="200" height="200"></video>
 					</div>
 				</div>
-				<!-- /ko -->
+				
 				<div class="oj-sm-12">
 					<h2>Recuperación de mensajes</h2>
 					<span>Introduce un usuario</span>
-					<input type="text" data-bind="value : textoAEnviar"
+					
+					<input type="text" data-bind="value : personaABuscar"
 								placeholder="Usuario">
 					<button data-bind="click : recuperarMensajes">Recuperar mensajes</button>
-					<!-- ko foreach : mensajes -->
+					
+					<!-- ko foreach : mensajesRecuperados -->
 					<div>
-						<span data-bind="html : $data.hora"></span>: <span
-							data-bind="html : $data.texto"></span>
+						<span data-bind="html : $data"></span>: 
 					</div>
-							<!-- /ko -->
+					<!-- /ko -->
 				</div>
+				<!-- /ko -->
 			</div>
 		</div>
 	</div>

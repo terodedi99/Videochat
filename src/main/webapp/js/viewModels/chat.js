@@ -8,7 +8,7 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 		
 		self.recipient = ko.observable();
 
-		self.chat = ko.observable(new Chat(ko));
+		self.chat = ko.observable(new Chat(ko, this.user));
 		
 		self.videoChat = ko.observable(new VideoChat(ko));
 
@@ -23,6 +23,7 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 			self.headerConfig({'view':view, 'viewModel': app.getHeaderModel()})
 		})
 
+		
 		self.connected = function() {
 			accUtils.announce('Chat page loaded.');
 			document.title = "Chat";
