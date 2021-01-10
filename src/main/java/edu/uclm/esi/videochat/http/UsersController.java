@@ -65,6 +65,14 @@ public class UsersController {
 		String email = jso.getString("email");
 		String pwd1 = jso.getString("pwd1");
 		String pwd2 = jso.getString("pwd2");
+		String picture;
+		if (jso.getString("picture") != null) {
+			picture = jso.getString("picture");
+			
+			
+		} else {
+			 picture = jso.optString("picture");
+		}
 		if (!pwd1.equals(pwd2))
 			throw new Exception("Error: las contraseñas no coinciden");
 		User user = new User();
@@ -72,7 +80,7 @@ public class UsersController {
 		user.setName(name);
 		user.setPwd(pwd1);
 		user.setConfirmationDate(0);
-		String picture = jso.optString("picture");
+		//String picture = jso.optString("picture");
 		user.setPicture(picture);
 		userRepo.save(user);
 		

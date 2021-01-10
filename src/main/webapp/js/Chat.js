@@ -83,6 +83,8 @@ class Chat {
 	
 	recuperarMensajes(){
 		let self = this;
+		self.mensajesRecuperados([]);
+		
 		console.log("Sender:" +this.user().name + ", Recipient: " + this.personaABuscar())
 		//self.message("Has pulsado recuperar mensajes de: " + self.personaABuscar);
 		var info = {
@@ -97,18 +99,15 @@ class Chat {
 			contentType : 'application/json',
 			success : function(response) {
 				console.log("Buena maquina");
-				for (var i=0; i<response.length; i++){
-					//this.mensajesRecuperados.push(response[i]);
-					//console.log(this.personaABuscar());
-					//console.log(this.mensajesRecuperados());
-					//console.log(self.mensajesRecuperados());
-					self.mensajesRecuperados.push(response[i].message);
-					console.log(self.mensajesRecuperados);
-					
-					
+				if(response.length == 0){
+					window.alert("No se han encontrado conversaciones con ese usuario");
+				} else{
+					for (var i=0; i<response.length; i++){
+						var dateComplete = new Date(response[i].date);
+						response[i].date = dateComplete.getDate() + "/" + (dateComplete.getMonth() + 1) + "/" + dateComplete.getFullYear();
+						self.mensajesRecuperados.push(response[i]);
+					}
 				}
-//				app.user = ko.observable(response);
-//				app.router.go( { path : 'chat' } );
 			},
 			error : function(response) {
 				alert("Error: "/* + response.responseJSON.error*/);

@@ -22,7 +22,7 @@ public class User {
 	private WebSocketSession sessionDeTexto;
 	@Transient 
 	private WebSocketSession sessionDeVideo;
-	private long confirmationDate;
+	private long confirmationDate = 0;
 	
 	public User() {
 		this.id = UUID.randomUUID().toString();

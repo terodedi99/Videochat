@@ -129,7 +129,9 @@
 					
 					<!-- ko foreach : mensajesRecuperados -->
 					<div>
-						<span data-bind="html : $data"></span>: 
+					<span data-bind="html : $data.date"></span>
+					<span data-bind="html : $data.sender"></span>: 
+					<span data-bind="html : $data.message"></span> 
 					</div>
 					<!-- /ko -->
 				</div>
