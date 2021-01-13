@@ -24,7 +24,7 @@ public class WebSocketSignaling extends WebSocketVideoChat {
 		this.sessionsByUserName.put(user.getName(), wrapper);
 		this.sessionsById.put(session.getId(), wrapper);
 		
-		System.out.println(user.getName() + "--> Sesión de video" + session.getId());
+		System.out.println(user.getName() + "--> Sesión de video: " + session.getId());
 	}
 	
 	@Override

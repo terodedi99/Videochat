@@ -26,10 +26,9 @@ class Conversacion {
 		var mensaje = {
 			type : "LLAMAR",
 			destinatario : this.nombreInterlocutor,
-			texto : this.textoAEnviar()
 		};
 		this.chat.enviar(mensaje);
-		var mensaje = new Mensaje(this.textoAEnviar());
-		this.addMensaje(mensaje);
+//		var mensaje = new Mensaje(this.textoAEnviar());
+//		this.addMensaje(mensaje);
 	}
 }

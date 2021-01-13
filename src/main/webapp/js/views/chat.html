@@ -42,11 +42,9 @@
 							<!-- ko if : foto -->
 							<img data-bind="attr : { src : foto }" width="30" height="30">
 							<!-- /ko -->
-							<a
-								data-bind="html : nombre, click : function() { $parent.setDestinatario($data); }"></a>
-							<button
-								data-bind="click : function() { $parents[$parents.length-1].enviarOferta($data); }">Enviar
-								oferta</button>
+							<a data-bind="html : nombre, click : function() { $parent.setDestinatario($data); }"></a>
+						
+							<button	data-bind="click : function() { $parents[$parents.length-1].enviarOferta($data); }">Enviar oferta</button>
 						</div>
 						<!-- /ko -->
 					</div>
@@ -57,8 +55,8 @@
 						<div>
 							<a
 								data-bind="html : $data"></a>
-							<button
-								data-bind="click : function() { $parents[$parents.length-1].enviarOferta($data); }">Aceptar</button>
+							<button id="btnAceptar"
+								data-bind="click : function() { $parents[$parents.length-1].aceptarLlamada($data); }">Aceptar</button>
 							<button id="btnCortar" data-bind="click : function() { $parent.cortarLlamada(); }">Rechazar</button>
 						</div>
 						<!-- /ko -->		
@@ -75,8 +73,7 @@
 
 						<input type="text" size="50"
 							data-bind="value : mensajeQueVoyAEnviar">
-						<button data-bind="click : enviarATodos">Enviar mensaje a
-							todos</button>
+						<button data-bind="click : enviarATodos">Enviar mensaje a todos</button>
 						<br>
 					</div>
 				</div>
@@ -91,7 +88,8 @@
 							<!-- /ko -->
 							<input type="text" data-bind="value : textoAEnviar"
 								placeholder="Texto de tu mensaje">
-							<button data-bind="click : enviar">Enviar</button> <!-- En que momento le envia el mensaje -->
+							<button data-bind="click : enviar">Enviar</button> 
+							<button data-bind="click : llamar; ">Llamar</button>
 
 							<!-- ko foreach : mensajes -->
 							<div>

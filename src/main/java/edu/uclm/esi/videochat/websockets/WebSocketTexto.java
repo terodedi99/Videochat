@@ -34,7 +34,7 @@ public class WebSocketTexto extends WebSocketVideoChat {
 		this.sessionsByUserName.put(user.getName(), wrapper);
 		this.sessionsById.put(session.getId(), wrapper);
 		
-		System.out.println(user.getName() + "--> Sesión de texto" + session.getId());
+		System.out.println(user.getName() + "--> Sesión de texto: " + session.getId());
 	}
 	
 	@Override
@@ -72,6 +72,16 @@ public class WebSocketTexto extends WebSocketVideoChat {
 			mensaje.setRecipient(destinatario);
 			mensaje.setDate(System.currentTimeMillis());
 			guardarMensaje(mensaje);
+		}
+		else if (type.equals("LLAMAR")) {
+			String destinatario = jso.getString("destinatario");
+			JSONObject jsoMessage = new JSONObject();
+			jsoMessage.put("destinatario", jso.get("destinatario"));
+			User user = Manager.get().findUser(destinatario);
+			
+			WebSocketSession navegadorDelDestinatario = user.getSessionDeTexto();
+			
+			this.send(navegadorDelDestinatario, "type", "LLAMAR", "remitente", enviador, "destinatario", jsoMessage);
 			
 		}
 	}

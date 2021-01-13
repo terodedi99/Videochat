@@ -8,7 +8,6 @@ class Chat {
 		this.user = user;
 		this.usuarios = ko.observableArray([]);
 		this.llamadasEntrantes = ko.observableArray([]);
-		this.llamadasEntrantes.push("Isma");
 		this.mensajesRecibidos = ko.observableArray([]);
 		this.conversaciones = ko.observableArray([]);
 		
@@ -39,14 +38,14 @@ class Chat {
 			var data = JSON.parse(event.data);
 			if (data.type == "FOR ALL") {
 				var mensaje = new Mensaje(data.message, data.time);
-				this.mensajesRecibidos.push(mensaje);
+				self.mensajesRecibidos.push(mensaje);
 			} else if (data.type == "ARRIVAL") {
 				self.addUsuario(data.userName, data.picture);
 //				var usuario = new Usuario(data.userName, data.picture);
 //				self.usuarios.push(usuario);
 			} else if (data.type == "LLAMAR") {
-				self.addLlamadaEntrante(data.userName, data.picture);
-				self.mensajesRecibidos.push("En teoria se ha metido");
+				self.addLlamadaEntrante(data.remitente);
+				//self.mensajesRecibidos.push("En teoria se ha metido");
 //				var usuario = new Usuario(data.userName, data.picture);
 //				self.usuarios.push(usuario);
 			} else if (data.type == "BYE") {
@@ -81,6 +80,15 @@ class Chat {
 		
 	}
 	
+	llamada(destinatario){
+		
+		var conversacionActual = this.buscarConversacion(destinatario.nombre);
+		if (conversacionActual==null)
+			conversacionActual = new Conversacion(this.ko, destinatario.nombre, this);
+		
+		conversacionActual.llamar();
+	
+	}
 	recuperarMensajes(){
 		let self = this;
 		self.mensajesRecuperados([]);

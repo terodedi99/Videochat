@@ -91,7 +91,7 @@ public class User {
 		this.confirmationDate = date;
 	}
 	
-	public long getSetConfirmationDate() {
+	public long getConfirmationDate() {
 		return confirmationDate;
 	}
 }

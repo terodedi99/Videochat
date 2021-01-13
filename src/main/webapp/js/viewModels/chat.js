@@ -62,6 +62,11 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 
 		self.enviarOferta = function(destinatario) {
 			self.videoChat().enviarOferta(destinatario.nombre);
+			self.chat().llamada(destinatario);
+		}
+		
+		self.aceptarLlamada = function(destinatario) {
+			self.videoChat().aceptarLlamada(destinatario);
 		}
 		
 		self.disconnected = function() {
