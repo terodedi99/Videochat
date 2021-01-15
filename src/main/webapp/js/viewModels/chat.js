@@ -61,12 +61,13 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 		}
 
 		self.enviarOferta = function(destinatario) {
-			self.videoChat().enviarOferta(destinatario.nombre);
+			self.videoChat().enviarOferta(destinatario);
 			self.chat().llamada(destinatario);
 		}
 		
 		self.aceptarLlamada = function(destinatario) {
 			self.videoChat().aceptarLlamada(destinatario);
+			self.chat().quitarLlamadaEntrante(destinatario);
 		}
 		
 		self.disconnected = function() {
@@ -77,8 +78,9 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 			// Implement if needed
 		};
 		
-		self.cortarLlamada = function(){
-			self.videoChat().cortarLlamada();
+		self.rechazarLlamada = function(destinatario){
+			self.videoChat().rechazarLlamada(destinatario);
+			self.chat().quitarLlamadaEntrante(destinatario);
 		}
 	}
 

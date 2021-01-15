@@ -174,6 +174,16 @@ class Chat {
 	}
 	
 	addLlamadaEntrante(userName, picture){
-		this.llamadasEntrantes.push(userName);}
+		this.llamadasEntrantes.push(userName);
+	}
+	
+	quitarLlamadaEntrante(userName, picture){
+		for (var i=0; i<this.llamadasEntrantes().length; i++) {
+			if (this.llamadasEntrantes()[i] == userName) {
+				this.llamadasEntrantes.splice(i, 1);
+				break;
+			}
+		}
+	}
 }
 	

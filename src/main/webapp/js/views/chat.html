@@ -55,9 +55,8 @@
 						<div>
 							<a
 								data-bind="html : $data"></a>
-							<button id="btnAceptar"
-								data-bind="click : function() { $parents[$parents.length-1].aceptarLlamada($data); }">Aceptar</button>
-							<button id="btnCortar" data-bind="click : function() { $parent.cortarLlamada(); }">Rechazar</button>
+							<button id="btnAceptar"	data-bind="click : function() { $parents[$parents.length-1].aceptarLlamada($data); }">Aceptar</button>
+							<button id="btnCortar" data-bind="click : function() { $parents[$parents.length-1].rechazarLlamada($data); }">Rechazar</button>
 						</div>
 						<!-- /ko -->		
 					</div>
@@ -110,9 +109,9 @@
 					</div>
 					<div class="oj-sm-4">
 						<h4>Zona de vídeo</h4>
-						<video id="widgetVideoLocal" playsinline autoplay controls mute
+						<video id="widgetVideoLocal" playsinline autoplay mute
 							width="200" height="200"></video>
-						<video id="widgetVideoRemoto" playsinline autoplay controls
+						<video id="widgetVideoRemoto" playsinline autoplay
 							width="200" height="200"></video>
 					</div>
 				</div>

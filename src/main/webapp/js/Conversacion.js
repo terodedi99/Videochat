@@ -28,7 +28,5 @@ class Conversacion {
 			destinatario : this.nombreInterlocutor,
 		};
 		this.chat.enviar(mensaje);
-//		var mensaje = new Mensaje(this.textoAEnviar());
-//		this.addMensaje(mensaje);
 	}
 }

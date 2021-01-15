@@ -49,7 +49,7 @@ public class WebSocketSignaling extends WebSocketVideoChat {
 		}
 		if (type.equals("ANSWER")) {
 			VideoRoom videoRoom = this.videoRooms.get("1");
-			this.send(videoRoom.getA(), "type", "ANSWER", "sessionDescription", jso.get("sessionDescription"));
+			this.send(videoRoom.getA(), "type", "ANSWER", "sessionDescription", jso.get("sessionDescription") , "valor", jso.get("valor"));
 			return;
 		}
 		if (type.equals("CANDIDATE")) {

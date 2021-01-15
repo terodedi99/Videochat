@@ -47,18 +47,32 @@ class VideoChat {
 				}
 				return;
 			}
-//			if (data.type=="LLAMAR") {
-//				console.log("Bien");
-//				return;
-//			}
+
 
 			if (data.type=="ANSWER") {
-				let sessionDescription = data.sessionDescription;
-				let rtcSessionDescription = new RTCSessionDescription(sessionDescription);
-				self.addMensaje("Añadiendo sessionDescription a la remoteDescription", "orange");
-				self.conexion.setRemoteDescription(rtcSessionDescription);
-				self.addMensaje("sessionDescription añadida a la remoteDescription", "orange");
-				return;
+
+				var localVideo = document.getElementById("widgetVideoLocal");
+				var remoteVideo = document.getElementById("widgetVideoRemoto");
+				if (data.valor == "YES"){
+					remoteVideo.setAttribute("style", "display: visible");
+					localVideo.setAttribute("style", "display: visible");
+					let sessionDescription = data.sessionDescription;
+					let rtcSessionDescription = new RTCSessionDescription(sessionDescription);
+					self.addMensaje("Añadiendo sessionDescription a la remoteDescription", "orange");
+					self.conexion.setRemoteDescription(rtcSessionDescription);
+					self.addMensaje("sessionDescription añadida a la remoteDescription", "orange");
+					return;
+				}
+				if (data.valor == "NO"){
+					console.log("HfuiaoBFIUBUI");
+					remoteVideo.setAttribute("style", "display: none");
+					localVideo.setAttribute("style", "display: none");
+//					if (remoteVideo.srcObject) {
+//						remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+//					}
+					window.alert("Llamada rechazada");
+					
+				}
 			}
 		}
 		if (!this.videoLocalOn)
@@ -69,35 +83,6 @@ class VideoChat {
 	anunciarLlamada(remitente, sessionDescription) {
 		this.addMensaje("Se recibe llamada de " + remitente + " con su sessionDescription", "black");
 		this.UnaSessionDescription = sessionDescription;
-//		let rtcSessionDescription = new RTCSessionDescription(sessionDescription);
-//		this.conexion.setRemoteDescription(rtcSessionDescription);
-//		let sdpConstraints = {};
-		let self = this;
-		
-//		this.conexion.createAnswer(
-//				function(sessionDescription) {
-//					self.conexion.setLocalDescription(sessionDescription).then(
-//						function() {
-//							let msg = {
-//								type : "LLAMAR",
-//								sessionDescription : sessionDescription
-//							};
-//							self.ws.send(JSON.stringify(msg));
-//						}
-//					);
-//				},
-//				function(error) {
-//					self.addMensaje("Error al crear oferta en el servidor Stun: " + error, "red");
-//				},
-//				sdpConstraints
-//			);
-		
-//		let aceptar = window.confirm("Te llama " + remitente + ". ¿Contestar?\n");
-//		if (aceptar){
-//			this.aceptarLlamada(remitente, sessionDescription);
-//		}
-//		else
-//			this.rechazarLlamada(remitente, sessionDescription);			
 	}
 	
 	aceptarLlamada(remitente) {
@@ -121,10 +106,13 @@ class VideoChat {
 						self.addMensaje("Enviando aceptación al servidor de Signaling");
 						let msg = {
 							type : "ANSWER",
+							valor : "YES",
 							sessionDescription : sessionDescription
 						};
 						self.ws.send(JSON.stringify(msg));
 						self.addMensaje("Respuesta enviada al servidor de Signaling");
+						var localVideo = document.getElementById("widgetVideoLocal");
+						localVideo.setAttribute("style", "display: visible");
 					}
 				);
 			},
@@ -135,10 +123,42 @@ class VideoChat {
 		);
 	}
 	
-	rechazarLlamada(remitente, sessionDescription) {
+
+	rechazarLlamada(remitente) {
 		this.addMensaje("Llamada de " + remitente + " rechazada");
-		this.addMensaje("Implementar función rechazarLlamada", "red");
+		let sessionDescription = this.UnaSessionDescription;
+		let rtcSessionDescription = new RTCSessionDescription(sessionDescription);
+		this.conexion.setRemoteDescription(rtcSessionDescription);
+		
+		let sdpConstraints = {};
+		let self = this;
+		this.conexion.createAnswer(
+			function(sessionDescription) {
+				self.conexion.setLocalDescription(sessionDescription).then(
+					function() {
+						let msg = {
+							type : "ANSWER",
+							valor : "NO",
+							remitente : remitente,
+							sessionDescription : sessionDescription
+						};
+						self.ws.send(JSON.stringify(msg));
+						self.addMensaje("Respuesta enviada al servidor de Signaling");
+						var remoteVideo = document.getElementById("widgetVideoRemoto");
+						remoteVideo.setAttribute("style", "display: none");	
+						var localVideo = document.getElementById("widgetVideoLocal");
+						localVideo.setAttribute("style", "display: none");
+						
+					}
+				);
+			},
+			function(error) {
+				self.addMensaje("Error al crear oferta en el servidor Stun: " + error, "red");
+			},
+			sdpConstraints
+		);
 	}
+	
 	
 	encenderVideoLocal(callback) {
 		let self = this;
@@ -166,7 +186,7 @@ class VideoChat {
 	}
 	
 	crearConexion(self, callback) {
-		//let self = this;
+		// let self = this;
 		let servers = { 
 			iceServers : [ 
 				// { "url" : "stun:stun.1.google.com:19302" }
@@ -181,7 +201,7 @@ class VideoChat {
 		self.addMensaje("RTCPeerConnection creada");
 		
 		self.addMensaje("Asociando pistas locales a la RTCPeerConnection");
-		//this.encenderVideoLocal();
+		// this.encenderVideoLocal();
 		let localTracks = self.localStream.getTracks();
 		localTracks.forEach(track =>
 			{
@@ -230,15 +250,17 @@ class VideoChat {
 		self.conexion.onremovetrack = function(event) {
 			self.addMensaje("self.conexion.onremovetrack");
 		}
-		//callback(self);
+		var localVideo = document.getElementById("widgetVideoLocal");
+		localVideo.setAttribute("style", "display: none");
+		// callback(self);
 	}	
 	
-	//Ahora mismo no se usa
+	// Ahora mismo no se usa
 	crearOffer(self){
 		let sdpConstraints = {};
 		self.conexion.createOffer(
 				function(sessionDescription) {
-//					let self = this;
+// let self = this;
 					self.addMensaje("sessionDescription recibida del servidor Stun");
 					self.conexion.setLocalDescription(sessionDescription);
 					self.addMensaje("sessionDescription enlazada a la RTCPeerConnnection local");
@@ -262,21 +284,22 @@ class VideoChat {
 	enviarOferta(destinatario) {
 		let self = this;
 		let sdpConstraints = {};
-		this.destinatario = destinatario;
+		this.destinatario = destinatario.nombre;
 		this.addMensaje("Creando oferta en el servidor Stun");
 		this.conexion.createOffer(
 				function(sessionDescription) {
 					self.addMensaje("sessionDescription recibida del servidor Stun");
 					self.conexion.setLocalDescription(sessionDescription);
 					self.addMensaje("sessionDescription enlazada a la RTCPeerConnnection local");
-					self.addMensaje("Enviando oferta a " + destinatario + " mediante el servidor de Signaling");
+					self.addMensaje("Enviando oferta a " + destinatario.nombre + " mediante el servidor de Signaling");
 					let msg = {
 						type : "OFFER",
 						sessionDescription : sessionDescription,
-						recipient : destinatario
+						recipient : destinatario.nombre
 					};
 					self.ws.send(JSON.stringify(msg));
 					self.addMensaje("Oferta enviada al servidor de signaling");
+					//viewModel.chat().llamada(destinatario);
 				},
 				function(error) {
 					self.addMensaje("Error al crear oferta en el servidor Stun", true);
