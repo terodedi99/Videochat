@@ -10,11 +10,11 @@
       <div class="oj-hybrid-padding">
         <h1>Creación de cuenta</h1>
         <div>
-            <input type="text" placeholder="Nombre de usuario" data-bind="value : name">
-            <input type="email" placeholder="Correo electrónico" data-bind="value : email">
-            <input type="password" placeholder="Contraseña" data-bind="value : pwd1">
-            <input type="password" placeholder="Repite contraseña" data-bind="value : pwd2">
-            <input type ="file" size="50" data-bind="event : {change : setPicture }"><br>
+            <input id="nombre" type="text" placeholder="Nombre de usuario" data-bind="value : name">
+            <input id="email" type="email" placeholder="Correo electrónico" data-bind="value : email">
+            <input id="pwd1" type="password" placeholder="Contraseña" data-bind="value : pwd1">
+            <input id="pwd2" type="password" placeholder="Repite contraseña" data-bind="value : pwd2">
+            <input id="img" type ="file" size="50" data-bind="event : {change : setPicture }"><br>
             <img data-bind="attr: { src : picture}">
 
             <button id="btnCrearCuenta" data-bind="click : register">Crear cuenta!</button>

@@ -3,8 +3,8 @@ define([ 'knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils',
 
 	function LoginViewModel() {
 		var self = this;
-		self.userName = ko.observable("pepe");
-		self.pwd = ko.observable("pepe");
+		self.userName = ko.observable("");
+		self.pwd = ko.observable("");
 		self.message = ko.observable("");
 		
 		app.userName = self.userName();

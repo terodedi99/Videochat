@@ -67,9 +67,6 @@ class VideoChat {
 					console.log("HfuiaoBFIUBUI");
 					remoteVideo.setAttribute("style", "display: none");
 					localVideo.setAttribute("style", "display: none");
-//					if (remoteVideo.srcObject) {
-//						remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-//					}
 					window.alert("Llamada rechazada");
 					
 				}
