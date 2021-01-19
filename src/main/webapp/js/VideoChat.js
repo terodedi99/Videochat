@@ -61,7 +61,7 @@ class VideoChat {
 					self.addMensaje("Añadiendo sessionDescription a la remoteDescription", "orange");
 					self.conexion.setRemoteDescription(rtcSessionDescription);
 					self.addMensaje("sessionDescription añadida a la remoteDescription", "orange");
-					return;
+					return;	
 				}
 				if (data.valor == "NO"){
 					
@@ -69,7 +69,8 @@ class VideoChat {
 					localVideo.setAttribute("style", "display: none");
 					window.alert("Llamada rechazada");
 					
-					setTimeout(function(){ self.conexion.close; }, 3000);
+					setTimeout(function(){ self.conexion.close; }, 2000);
+					setTimeout(function(){ this.crearConexion; }, 4000);
 					
 				}
 			}
