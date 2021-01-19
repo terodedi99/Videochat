@@ -86,7 +86,7 @@ class Chat {
 		if (conversacionActual==null)
 			conversacionActual = new Conversacion(this.ko, destinatario.nombre, this);
 		
-		conversacionActual.llamar();
+		conversacionActual.llamar(this.user().name);
 	
 	}
 	recuperarMensajes(){

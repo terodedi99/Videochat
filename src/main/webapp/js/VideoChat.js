@@ -64,10 +64,12 @@ class VideoChat {
 					return;
 				}
 				if (data.valor == "NO"){
-					console.log("HfuiaoBFIUBUI");
+					
 					remoteVideo.setAttribute("style", "display: none");
 					localVideo.setAttribute("style", "display: none");
 					window.alert("Llamada rechazada");
+					
+					setTimeout(function(){ self.conexion.close; }, 3000);
 					
 				}
 			}
@@ -110,6 +112,10 @@ class VideoChat {
 						self.addMensaje("Respuesta enviada al servidor de Signaling");
 						var localVideo = document.getElementById("widgetVideoLocal");
 						localVideo.setAttribute("style", "display: visible");
+						var remoteVideo = document.getElementById("widgetVideoRemoto");
+						remoteVideo.setAttribute("style", "display: visible");	
+						
+						
 					}
 				);
 			},

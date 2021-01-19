@@ -63,6 +63,16 @@ public class Manager {
 		}
 		return users;
 	}
+	
+	public Vector<String> getNombresUsuariosConectados() {
+		Vector<String> users = new Vector<>();
+		Enumeration<User> eUsers = this.usersMap.elements();
+		while (eUsers.hasMoreElements()) {
+			String nombreUser= eUsers.nextElement().getName();
+			users.add(nombreUser);
+		}
+		return users;
+	}
 
 	public HttpSession getSession(String sessionId) {
 		return this.sessions.get(sessionId);

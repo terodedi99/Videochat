@@ -96,23 +96,75 @@ public class LoginTest {
 	
 	@Test
 	public void login() {
-		hacerLogin(chrome, "Pepe", "pepe");
-		String a = "window.open('https://localhost:7500');";  // replace link with your desired link
+		hacerLogin(chrome, "Pepe", "pepe", 1);
+		String a = "window.open('https://localhost:7500');";
+		((JavascriptExecutor)chrome).executeScript(a);
 		((JavascriptExecutor)chrome).executeScript(a);
 		
 	    ArrayList<String> tabs = new ArrayList<String> (chrome.getWindowHandles());
-	    chrome.switchTo().window(tabs.get(1)); //switches to new tab
-	    hacerLogin(chrome, "Ana", "ana");
-
-	    chrome.switchTo().window(tabs.get(2)); //switches to new tab
 	    
-	    hacerLogin(chrome, "Lucas", "lucas");
+	    chrome.switchTo().window(tabs.get(1)); 
+	    hacerLogin(chrome, "Ana", "ana", 2);
+
+	    chrome.switchTo().window(tabs.get(2)); 
+	    
+	    hacerLogin(chrome, "Lucas", "lucas", 2);
+	    
+	    chrome.switchTo().window(tabs.get(0));
+	    
+	    llamaryrechazar(chrome, tabs);
+	    
+	    llamaryaceptar(chrome, tabs);
+	    
 	}
 
-	private void hacerLogin(WebDriver driver, String nombre, String pwd) {
+	private void llamaryaceptar(WebDriver driver, ArrayList<String> tabs) {
+		driver.switchTo().window(tabs.get(1));
+		WebElement llamarAnaLucas = driver.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div[3]/div[1]/div[3]/button"));
+		llamarAnaLucas.click();
 
-		 driver.get("https://localhost:7500/");
+		try {
+			Thread.sleep(1000);
+		}catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.switchTo().window(tabs.get(2));
+		WebElement btnAceptarAAna = driver.findElement(By.xpath("//*[@id=\"btnAceptar\"]"));
+		btnAceptarAAna.click();	
+	    
+}
 
+	private void llamaryrechazar(WebDriver driver, ArrayList<String> tabs) {
+		WebElement llamarPepeAna = driver.findElement(By.xpath("//*[@id=\"globalBody\"]/oj-module/div[1]/div[2]/div/div/div[3]/div[1]/div[2]/button"));
+		llamarPepeAna.click();
+		driver.switchTo().window(tabs.get(1));
+		WebElement btnRechazarAPepe = driver.findElement(By.xpath("//*[@id=\"btnCortar\"]"));
+		btnRechazarAPepe.click();
+		driver.switchTo().window(tabs.get(0));
+		
+		try {
+			Thread.sleep(2000);
+		}catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		
+		assertThat(chrome.switchTo().alert().getText(), is("Llamada rechazada"));
+		chrome.switchTo().alert().accept();
+		
+		
+	    
+}
+	private void hacerLogin(WebDriver driver, String nombre, String pwd, int n) {
+
+		
+		 
+		 if (driver instanceof ChromeDriver && n == 1) {
+			 driver.get("https://localhost:7500/");
+			 driver.findElement(By.id("details-button")).click();
+			 driver.findElement(By.id("proceed-link")).click();
+		 }
+		 
 		 try {
 		  Thread.sleep(2000);
 		 } catch (InterruptedException e) {
@@ -214,7 +266,7 @@ public class LoginTest {
 		boton.click();
 		
 		try {
-			Thread.sleep(500);
+			Thread.sleep(2000);
 		}catch(InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -22,9 +22,10 @@ class Conversacion {
 		this.addMensaje(mensaje);
 	}
 	
-	llamar() {
+	llamar(sender) {
 		var mensaje = {
 			type : "LLAMAR",
+			remitente: sender,
 			destinatario : this.nombreInterlocutor,
 		};
 		this.chat.enviar(mensaje);

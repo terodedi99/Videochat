@@ -103,7 +103,7 @@ public class UsersController {
 		return Mensajes;
 		//return messageRepo.recuperarMensajes(sender, recipient);
 		}
-	
+
 	@GetMapping("/confirmarCuenta2/{tokenId}")
 	public void confirmarCuenta2(HttpServletRequest request, HttpServletResponse response, @PathVariable String tokenId) throws IOException {
 		// Ir a la base de datos, buscar el token con ese tokenId en la tabla, ver que no ha caducado
@@ -142,4 +142,19 @@ public class UsersController {
 	public List<User> getUsuariosConectados() {
 		return Manager.get().getUsuariosConectados();
 	}
+	
+	@GetMapping(value = "/getNombresUsuariosConectados", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<String> getnombresDeUsuariosConectados() {
+		return Manager.get().getNombresUsuariosConectados();
+	}
+	
+	
+	@PostMapping(value = "/getPicture")
+	public String getPicture(@RequestBody String userName) {
+		JSONObject jso = new JSONObject(userName);
+		String nombre = jso.getString("userName");
+		return Manager.get().findUser(nombre).getPicture();
+	}
+	
+
 }

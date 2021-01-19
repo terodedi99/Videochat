@@ -75,13 +75,15 @@ public class WebSocketTexto extends WebSocketVideoChat {
 		}
 		else if (type.equals("LLAMAR")) {
 			String destinatario = jso.getString("destinatario");
+			String remitente = jso.getString("remitente");
+			
 			JSONObject jsoMessage = new JSONObject();
 			jsoMessage.put("destinatario", jso.get("destinatario"));
 			User user = Manager.get().findUser(destinatario);
 			
 			WebSocketSession navegadorDelDestinatario = user.getSessionDeTexto();
 			
-			this.send(navegadorDelDestinatario, "type", "LLAMAR", "remitente", enviador, "destinatario", jsoMessage);
+			this.send(navegadorDelDestinatario, "type", "LLAMAR", "remitente", remitente, "destinatario", jsoMessage);
 			
 		}
 	}

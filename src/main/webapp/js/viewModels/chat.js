@@ -34,14 +34,19 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 
 		function getUsuariosConectados() {
 			var data = {	
-				url : "users/getUsuariosConectados",
+				url : "users/getNombresUsuariosConectados",   // array de String
 				type : "get",
 				contentType : 'application/json',
 				success : function(response) {
 					for (var i=0; i<response.length; i++) {
-						var userName = response[i].name;
-						var picture = response[i].picture;
-						self.chat().addUsuario(userName, picture);
+						var user = {
+								nombre : response[i],
+								picture : ko.observable(null)
+						};
+						//var userName = response[i].name;
+						//var picture = response[i].picture;
+						self.chat().addUsuario(user.nombre, user.picture);
+						loadPicture(user);
 					}
 				},
 				error : function(response) {
@@ -51,6 +56,31 @@ define(['knockout', 'appController', 'ojs/ojmodule-element-utils', 'accUtils'],
 			$.ajax(data);
 		}
 	
+		function loadPicture(user) {
+			
+			var info = {
+					userName: user.nombre,					
+				};
+			
+			var data = {	
+					data : JSON.stringify(info),
+					url : "users/getPicture", 
+					type : "post",
+					contentType : 'application/json',
+					success : function(response) {
+						user.picture(response);
+					},
+					error : function(response) {
+						self.error(response.responseJSON.error);
+					}
+				};
+				$.ajax(data);
+//			
+//			var data = {
+//				url ^"uses/getPicture/"del user.name,
+//				user.picture(response)
+//			}
+		}
 		
 		self.encenderVideoLocal = function() {
 			self.videoChat().encenderVideoLocal();
