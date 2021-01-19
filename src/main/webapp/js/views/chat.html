@@ -27,11 +27,6 @@
 				</div>
 				<!-- /ko -->
 
-				<div class="oj-sm-12">
-					<button data-bind="click : encenderVideoLocal">Encender
-						vídeo local</button>
-					<button data-bind="click : crearConexion">Crear conexión</button>
-				</div>
 
 				<!-- ko with : chat -->
 				<div class="oj-sm-12 oj-flex">
@@ -78,7 +73,7 @@
 				</div>
 
 				<div class="oj-sm-12 oj-flex">
-					<div class="oj-sm-4">
+					<div class="oj-sm-6">
 						<h4>Conversaciones privadas</h4>
 						<!-- ko foreach : conversaciones -->
 						<div data-bind="visible : visible">
@@ -88,7 +83,6 @@
 							<input type="text" data-bind="value : textoAEnviar"
 								placeholder="Texto de tu mensaje">
 							<button data-bind="click : enviar">Enviar</button> 
-							<button data-bind="click : llamar; ">Llamar</button>
 
 							<!-- ko foreach : mensajes -->
 							<div>
@@ -99,15 +93,8 @@
 						</div>
 						<!-- /ko -->
 					</div>
-					<div class="oj-sm-4">
-						<h4>Mensajes de conexión</h4>
-						<!-- ko with : $parents[$parents.length-1].videoChat -->
-						<!-- ko foreach : mensajes -->
-						<div data-bind="html : texto, style : { color :  color }"></div>
-						<!-- /ko -->
-						<!-- /ko -->
-					</div>
-					<div class="oj-sm-4">
+					
+					<div class="oj-sm-6">
 						<h4>Zona de vídeo</h4>
 						<video id="widgetVideoLocal" playsinline autoplay mute
 							width="200" height="200"></video>
